@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mini CRM
 
-## Getting Started
+Meta (Facebook, Instagram) reklamlarından veya Make.com / n8n gibi otomasyon araçlarından gelen müşteri adaylarını (lead) tek bir ekrandan yönetebileceğiniz, hafif ve modern bir CRM uygulaması.
 
-First, run the development server:
+## 🚀 Özellikler
 
+- **Gerçek Zamanlı Senkronizasyon:** Supabase Realtime sayesinde yeni gelen müşteriler anında (sayfa yenilenmeden) tabloya düşer.
+- **Webhook Entegrasyonu:** Dış sistemlerden veri almak için hazır `/api/webhook/meta` uç noktası.
+- **Güvenli Kimlik Doğrulama:** Supabase Auth ile admin girişi.
+- **Gelişmiş Veri Tablosu:**
+  - Excel tarzı anlık sütun filtreleme (Ad, E-posta, Telefon, Kaynak, Durum)
+  - Sütun başlıklarına tıklayarak sıralama (Sorting)
+  - Sayfalama (Pagination)
+- **Detaylı İşlem Geçmişi:** Müşteri durumu her değiştiğinde veya yeni bir not eklendiğinde işlemi kimin yaptığı tarihle birlikte loglanır.
+- **Mobil Uyumlu Tasarım (Responsive):** Telefondan ve tabletten tam uyumlu, akıcı kullanıcı deneyimi.
+
+## 🛠️ Kullanılan Teknolojiler
+
+- **Frontend & Backend:** [Next.js](https://nextjs.org/) (App Router, React)
+- **Veritabanı & Auth:** [Supabase](https://supabase.com/) (PostgreSQL)
+- **Stil:** Saf (Vanilla) CSS tabanlı modern UI sistemi
+
+## 📦 Kurulum ve Çalıştırma
+
+Projeyi bilgisayarınızda yerel olarak çalıştırmak için aşağıdaki adımları izleyin:
+
+### 1. Depoyu Klonlayın
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yusahaz/mini-crm.git
+cd mini-crm
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Gerekli Paketleri Yükleyin
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Çevre Değişkenlerini Ayarlayın
+Proje dizininde `.env.local` adında bir dosya oluşturun ve Supabase bilgilerinizi ekleyin:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-## Learn More
+### 4. Veritabanını Hazırlayın
+Supabase SQL editörünü açın ve projenin kök dizinindeki `supabase_schema.sql` dosyasının içeriğini kopyalayıp çalıştırarak `leads` ve `notes` tablolarını oluşturun.
 
-To learn more about Next.js, take a look at the following resources:
+### 5. Uygulamayı Başlatın
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Uygulama `http://localhost:3000` adresinde çalışmaya başlayacaktır. 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🔗 Webhook Testi Yapmak
 
-## Deploy on Vercel
+Sistemin çalışıp çalışmadığını test etmek için uygulamanız açıkken bilgisayarınızın terminalinden aşağıdaki komutu çalıştırabilirsiniz:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+curl -X POST http://localhost:3000/api/webhook/meta \
+-H "Content-Type: application/json" \
+-d '{"name":"Ahmet Test","phone":"+90 555 123 4567","email":"test@example.com","source":"Webhook Test"}'
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Bu komutu çalıştırdıktan hemen sonra verinin panele düştüğünü görebilirsiniz.
